@@ -9,6 +9,7 @@ URL='https://web.archive.org/web/20230902185326/https://en.wikipedia.org/wiki/Li
 
 table_attributes=['Country','GDP_USD_millions']
 db_name='World_Economies.db'
+conn=sqlite3.connect(db_name)
 table_name='Countries_by_GDP'
 csv_path='Countries_by_GDP.csv'
 
@@ -28,7 +29,7 @@ def extract(url, table_attributes):
                              "GDP_USD_millions": col[2].contents[0]}
                 df1 = pd.DataFrame(data_dict, index=[0])
                 df = pd.concat([df,df1], ignore_index=True)
-    return df
+    print(df)
     
     
 ##TRANSFORMATION
@@ -42,8 +43,39 @@ def transform(df):
     GDP_list = [np.round(x/1000,2) for x in GDP_list]
     df["GDP_USD_millions"] = GDP_list
     df=df.rename(columns = {"GDP_USD_millions":"GDP_USD_billions"})
-    return df
+    print(df)
 
+##LOADING
+def load_to_csv(df,csv_path):
+    df.to_csv(csv_path)
     
+def  load_to_db(df,conn,table_name):
+    
+    df.to_sql(conn, table_name, if_exists='replace', index=False)
+    
+    
+ ##QUERYING THE DATABASE TABLE
+def run_query(conn,table_name):
+    query=f"SELECT * FROM {table_name}"
+    query_output=pd.read_sql(query, conn)
+    print(query_output)
+    
+    
+ ##LOGGING
+def log_progress(message): 
+    timestamp_format = '%Y-%h-%d-%H:%M:%S' # Year-Monthname-Day-Hour-Minute-Second 
+    now = datetime.now() # get current timestamp 
+    timestamp = now.strftime(timestamp_format) 
+    with open("etl_project_log.txt","a") as f: 
+        f.write(timestamp + ' : ' + message + '\n')
+        
+
+        
+    
+     
+    
+    
+    
+      
 
 
