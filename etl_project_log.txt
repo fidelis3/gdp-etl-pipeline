@@ -1,0 +1,12 @@
+2026-Mar-13-12:33:15 : ETL Job Started
+2026-Mar-13-12:33:15 : Extract phase Started
+2026-Mar-13-12:33:17 : Extract phase Ended
+2026-Mar-13-12:33:17 : Transform phase Started
+2026-Mar-13-12:34:03 : ETL Job Started
+2026-Mar-13-12:34:03 : Extract phase Started
+2026-Mar-13-12:34:05 : Extract phase Ended
+2026-Mar-13-12:34:05 : Transform phase Started
+2026-Mar-13-12:34:05 : Transform phase Ended
+2026-Mar-13-12:34:05 : Load phase Started
+2026-Mar-13-12:34:05 : Load phase Ended
+2026-Mar-13-12:34:05 : ETL Job Ended

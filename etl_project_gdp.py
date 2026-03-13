@@ -29,7 +29,7 @@ def extract(url, table_attributes):
                              "GDP_USD_millions": col[2].contents[0]}
                 df1 = pd.DataFrame(data_dict, index=[0])
                 df = pd.concat([df,df1], ignore_index=True)
-    print(df)
+    return df
     
     
 ##TRANSFORMATION
@@ -43,7 +43,7 @@ def transform(df):
     GDP_list = [np.round(x/1000,2) for x in GDP_list]
     df["GDP_USD_millions"] = GDP_list
     df=df.rename(columns = {"GDP_USD_millions":"GDP_USD_billions"})
-    print(df)
+    return df
 
 ##LOADING
 def load_to_csv(df,csv_path):
@@ -51,7 +51,7 @@ def load_to_csv(df,csv_path):
     
 def  load_to_db(df,conn,table_name):
     
-    df.to_sql(conn, table_name, if_exists='replace', index=False)
+    df.to_sql(table_name,conn, if_exists='replace', index=False)
     
     
  ##QUERYING THE DATABASE TABLE
@@ -68,6 +68,36 @@ def log_progress(message):
     timestamp = now.strftime(timestamp_format) 
     with open("etl_project_log.txt","a") as f: 
         f.write(timestamp + ' : ' + message + '\n')
+        
+        
+# EXTRACTION
+log_progress("ETL Job Started")
+log_progress("Extract phase Started")
+df = extract(URL, table_attributes)
+print("Extracted Data:")
+print(df)
+log_progress("Extract phase Ended")
+
+# TRANSFORMATION
+log_progress("Transform phase Started")
+df = transform(df)
+print("\nTransformed Data:")
+print(df)
+log_progress("Transform phase Ended")
+
+# LOADING
+log_progress("Load phase Started")
+load_to_csv(df, csv_path)
+print("\nData saved to CSV")
+load_to_db(df, conn, table_name)
+print("Data saved to Database")
+log_progress("Load phase Ended")
+
+# QUERYING
+print("\nQuery Output:")
+run_query(conn, table_name)
+
+log_progress("ETL Job Ended")        
         
 
         
